@@ -375,10 +375,32 @@ public class WSDLParser {
             XPathExpression expr = xpath.compile("//wsdl:operation[@name='" + operation + "']//"
                     + Const.XROAD_NS_PREFIX_OLD + ":version");
             NodeList nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
-            if (nodes.getLength() == 0)
+            if (nodes.getLength() == 0) {
+                LOGGER.debug("Try : //wsdl:operation[@name='" + operation + "']//" + Const.XROAD_NS_PREFIX + ":version");
                 nodes = (NodeList) xpath.compile(
                         "//wsdl:operation[@name='" + operation + "']//" + Const.XROAD_NS_PREFIX + ":version").evaluate(
                         doc, XPathConstants.NODESET);
+            }
+            if (nodes.getLength() == 0){
+                LOGGER.debug("!No MATCH : ");
+                LOGGER.debug("Try : //wsdl:operation[@name='" + operation + "']//" + Const.XROAD_NS_ID+ ":version");
+                nodes = (NodeList) xpath.compile(
+                        "//wsdl:operation[@name='" + operation + "']//" + Const.XROAD_NS_ID+ ":version").evaluate(
+                        doc, XPathConstants.NODESET);
+            }
+            if (nodes.getLength() == 0) {
+                LOGGER.debug("!No MATCH : No lets get desperate ");
+                LOGGER.debug("Try : //wsdl:operation//*:version");
+                nodes = (NodeList) xpath.compile(
+                        "//wsdl:operation//*:version").evaluate(
+                        doc, XPathConstants.NODESET);
+            }
+
+            if (nodes.getLength() == 0){
+                    LOGGER.warn("!STILL No MATCH : ");
+            }
+
+
             for (int i = 0; i < nodes.getLength(); i++) {
                 version = nodes.item(i).getChildNodes().item(0).getNodeValue();
             }
