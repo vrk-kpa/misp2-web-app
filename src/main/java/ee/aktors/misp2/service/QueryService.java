@@ -928,9 +928,9 @@ public class QueryService extends BaseService {
                 String xForm = null;
                 Query q = findObject(Query.class, id);
                 try {
-                    String filename = q.getName();
-                    String version = q.getServiceVersion();
-                    boolean serviceWithoutVersion = version == null || version.isEmpty();
+                    String filename = q.getServiceCode();
+                    String version = null; // q.getServiceVersion(); -- XSL files don't now produce files with version info rigth now??
+                    boolean serviceWithoutVersion =  version == null || version.isEmpty();
                     if (serviceWithoutVersion) {
                         filename += ".";
                     }
